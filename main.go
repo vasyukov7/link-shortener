@@ -41,8 +41,8 @@ func shortenHandler(w http.ResponseWriter, r *http.Request) {
 	store[short] = original
 	mu.Unlock()
 
-	w.Header().Set("Content-Type", "text/html")
-	fmt.Fprintf(w, "Short URL: <a href='/%s'>http://localhost:8080/%s</a><br><a href='/'>Back to form</a>", short, short)
+	w.Header().Set("Content-Type", "text/html; charset=utf-8")
+	fmt.Fprintf(w, "Короткая ссылка: <a href='/%s'>http://localhost:8080/%s</a><br><a href='/'>Назад</a>", short, short)
 }
 
 func redirectHandler(w http.ResponseWriter, r *http.Request) {
@@ -76,6 +76,5 @@ func main() {
 	http.HandleFunc("/", redirectHandler)
 
 	fmt.Println("Server started at :8080")
-	fmt.Println("Make sure index.html is in the same directory as the executable")
 	log.Fatal(http.ListenAndServe(":8080", nil))
 }
