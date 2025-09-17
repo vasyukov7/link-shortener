@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"html/template"
 	"log"
 	"math/rand"
 	"net/http"
@@ -14,6 +15,8 @@ var (
 	store = make(map[string]string)
 	mu    sync.Mutex
 )
+
+var resultTemplate *template.Template
 
 func generateShortURL() string {
 	letters := []rune("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789")
@@ -42,7 +45,20 @@ func shortenHandler(w http.ResponseWriter, r *http.Request) {
 	mu.Unlock()
 
 	w.Header().Set("Content-Type", "text/html; charset=utf-8")
-	fmt.Fprintf(w, "Короткая ссылка: <a href='/%s'>http://localhost:8080/%s</a><br><a href='/'>Назад</a>", short, short)
+
+	data := struct {
+		ShortURL string
+		FullURL  string
+	}{
+		ShortURL: short,
+		FullURL:  "http://localhost:8080/" + short,
+	}
+
+	err := resultTemplate.Execute(w, data)
+	if err != nil {
+		http.Error(w, "Page display error", http.StatusInternalServerError)
+		log.Printf("Template execution error: %v", err)
+	}
 }
 
 func redirectHandler(w http.ResponseWriter, r *http.Request) {
@@ -70,6 +86,12 @@ func main() {
 
 	if _, err := os.Stat("index.html"); os.IsNotExist(err) {
 		log.Fatal("index.html not found in current directory")
+	}
+
+	var err error
+	resultTemplate, err = template.ParseFiles("result.html")
+	if err != nil {
+		log.Fatal("Download error result.html: ", err)
 	}
 
 	http.HandleFunc("/shorten", shortenHandler)

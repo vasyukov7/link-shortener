@@ -38,49 +38,47 @@
             font-weight: 700;
         }
 
-        .form-group {
-            margin-bottom: 25px;
-        }
-
-        input[type="text"] {
-            width: 100%;
-            padding: 15px 20px;
-            border: 2px solid #e1e5e9;
+        .result {
+            background: #f8f9fa;
+            padding: 20px;
             border-radius: 10px;
+            margin-bottom: 25px;
+            border-left: 4px solid #667eea;
+        }
+
+        .result-text {
             font-size: 16px;
-            transition: all 0.3s ease;
-            outline: none;
+            color: #666;
+            margin-bottom: 10px;
         }
 
-        input[type="text"]:focus {
-            border-color: #667eea;
-            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        .short-link {
+            font-size: 18px;
+            font-weight: 600;
+            color: #667eea;
+            text-decoration: none;
+            word-break: break-all;
         }
 
-        input[type="text"]::placeholder {
-            color: #999;
+        .short-link:hover {
+            text-decoration: underline;
         }
 
-        button {
+        .btn {
+            display: inline-block;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: white;
-            border: none;
+            text-decoration: none;
             padding: 15px 30px;
             border-radius: 10px;
             font-size: 16px;
             font-weight: 600;
-            cursor: pointer;
             transition: all 0.3s ease;
-            width: 100%;
         }
 
-        button:hover {
+        .btn:hover {
             transform: translateY(-2px);
             box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
-        }
-
-        button:active {
-            transform: translateY(0);
         }
 
         @media (max-width: 480px) {
@@ -92,25 +90,20 @@
                 font-size: 2rem;
             }
             
-            input[type="text"] {
-                padding: 12px 15px;
-            }
-            
-            button {
-                padding: 12px 20px;
+            .short-link {
+                font-size: 16px;
             }
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>URL Shortener</h1>
-        <form action="/shorten" method="post">
-            <div class="form-group">
-                <input type="text" name="url" placeholder="Введите ссылку" required>
-            </div>
-            <button type="submit">Сократить</button>
-        </form>
+        <h1>Ссылка сокращена!</h1>
+        <div class="result">
+            <p class="result-text">Короткая ссылка:</p>
+            <a href="{{.ShortURL}}" class="short-link">{{.FullURL}}</a>
+        </div>
+        <a href="/" class="btn">Создать еще одну</a>
     </div>
 </body>
 </html>
